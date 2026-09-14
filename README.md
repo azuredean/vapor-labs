@@ -1,2 +1,8 @@
-# vapor-labs
-VAPOR — EU wholesale vapor catalog
+# VAPOR
+
+EU wholesale vapor catalog. Adult nicotine products — 18+ only.
+
+```bash
+npm install
+npm run dev
+```
