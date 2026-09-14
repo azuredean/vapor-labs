@@ -10,7 +10,7 @@ interface Props {
 
 const ITEMS: { id: Tab; label: string; icon: typeof Home }[] = [
   { id: "home", label: "Home", icon: Home },
-  { id: "cart", label: "Cart", icon: ShoppingCart },
+  { id: "cart", label: "Quote", icon: ShoppingCart },
   { id: "wishlist", label: "Wishlist", icon: Heart },
   { id: "account", label: "Account", icon: UserRound },
 ];

@@ -1,16 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { Check, Plus, Search, X } from "lucide-react";
 import Logo from "./Logo";
-import { CATEGORIES, GRID_PRODUCTS, yuan, type Filter, type Product } from "../data";
-
-/* ---------------- Menu drawer ---------------- */
+import ProductVisual from "./ProductVisual";
+import { CATEGORIES, GRID_PRODUCTS, type Filter, type Product } from "../data";
 
 export const NAV_LINKS = [
   "Home",
-  "Shop Devices",
-  "E-Liquids & Flavors",
-  "Pods & Coils",
-  "Limited Drops",
+  "ELFBAR",
+  "JNR",
+  "Vozol",
+  "Fumot",
+  "Lost Mary",
   "Safety & Support",
 ];
 
@@ -80,7 +80,7 @@ export function MenuDrawer({ open, onClose, onNavigate, onPickCategory }: Drawer
         </div>
 
         <p className="mt-auto px-4 text-[11px] leading-relaxed text-mute">
-          18+ only · EU TPD 2014/40/EU compliant.
+          18+ only · Wholesale catalog.
           <br />
           Nicotine is highly addictive. © 2026 Vapor Labs GmbH.
         </p>
@@ -88,8 +88,6 @@ export function MenuDrawer({ open, onClose, onNavigate, onPickCategory }: Drawer
     </>
   );
 }
-
-/* ---------------- Search overlay ---------------- */
 
 interface SearchProps {
   open: boolean;
@@ -115,7 +113,11 @@ export function SearchOverlay({ open, onClose, onAdd, onOpen }: SearchProps) {
     const t = q.trim().toLowerCase();
     if (!t) return GRID_PRODUCTS;
     return GRID_PRODUCTS.filter(
-      (p) => p.name.toLowerCase().includes(t) || p.category.toLowerCase().includes(t),
+      (p) =>
+        p.name.toLowerCase().includes(t) ||
+        p.brand.toLowerCase().includes(t) ||
+        p.kind.toLowerCase().includes(t) ||
+        p.options.some((o) => o.toLowerCase().includes(t)),
     );
   }, [q]);
 
@@ -130,7 +132,7 @@ export function SearchOverlay({ open, onClose, onAdd, onOpen }: SearchProps) {
             autoFocus
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Search devices, pods, flavors…"
+            placeholder="Search brands, devices, flavors…"
             className="h-full w-full bg-transparent font-display text-lg font-bold tracking-tight outline-none placeholder:font-body placeholder:text-sm placeholder:font-medium placeholder:text-mute"
           />
           <button
@@ -154,13 +156,13 @@ export function SearchOverlay({ open, onClose, onAdd, onOpen }: SearchProps) {
               onClick={() => onOpen(p.id)}
               className="flex cursor-pointer items-center gap-4 rounded-2xl bg-card p-3.5 transition hover:shadow-md"
             >
-              <div className="grid w-14 shrink-0 place-items-center py-2">
-                <div className="capsule h-12 w-3.5 rounded-full" />
+              <div className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-xl bg-paper">
+                <ProductVisual product={p} className="h-12 w-12" />
               </div>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-[15px] font-bold">{p.name}</p>
                 <p className="text-xs font-semibold text-mute">
-                  {p.category} · {yuan(p.price)}
+                  {p.brand} · {p.puffs ?? p.kind}
                 </p>
               </div>
               <button
@@ -168,8 +170,9 @@ export function SearchOverlay({ open, onClose, onAdd, onOpen }: SearchProps) {
                   e.stopPropagation();
                   onAdd(p);
                 }}
+                disabled={p.stock === "out"}
                 aria-label={`Add ${p.name}`}
-                className="grad-cta glow-blue grid size-11 shrink-0 place-items-center rounded-full text-white transition hover:scale-110 active:scale-90"
+                className="grad-cta glow-blue grid size-11 shrink-0 place-items-center rounded-full text-white transition hover:scale-110 active:scale-90 disabled:opacity-35"
               >
                 <Plus className="size-[18px]" strokeWidth={2.8} />
               </button>
@@ -183,8 +186,6 @@ export function SearchOverlay({ open, onClose, onAdd, onOpen }: SearchProps) {
     </div>
   );
 }
-
-/* ---------------- Toast ---------------- */
 
 export function Toast({ id, message }: { id: number; message: string }) {
   return (

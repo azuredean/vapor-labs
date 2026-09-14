@@ -4,24 +4,24 @@ import SubHeader from "../components/SubHeader";
 
 const FAQS = [
   {
-    q: "Who is allowed to order?",
-    a: "Only adults aged 18 or older (21 in some regions). Age is verified at checkout, and we refuse orders we cannot verify. Nicotine products are never sold to minors.",
+    q: "Who is allowed to enquire?",
+    a: "Only adults aged 18 or older (21 in some regions), typically licensed trade. Age is verified before dispatch. Nicotine products are never sold to minors.",
+  },
+  {
+    q: "Why are there no prices on the site?",
+    a: "List prices in our supplier sheets are cost prices, not selling prices. We quote privately based on brand, volume and destination. Add lines to your quote list and send an enquiry.",
   },
   {
     q: "Which countries do you ship to?",
-    a: "We ship across the EU and EEA wherever distance sales are permitted. Belgium, Denmark and Finland currently restrict cross-border e-cigarette sales, so orders from those countries may be cancelled with a full refund.",
+    a: "We quote across the EU and EEA wherever distance sales are permitted. Belgium, Denmark and Finland currently restrict cross-border e-cigarette sales, so those destinations may be declined.",
   },
   {
-    q: "What nicotine strengths do you sell?",
-    a: "In line with the EU Tobacco Products Directive, all e-liquids and pods are capped at 20 mg/ml, tanks hold a maximum of 2 ml and refill bottles a maximum of 10 ml.",
+    q: "What nicotine strengths are in the catalog?",
+    a: "The catalog includes 0%, 2%, 3% and 5% depending on the device, plus TPD-oriented 2% pod systems (JNR Areo X, FOX, Panda). Strengths actually shipped follow destination-market law.",
   },
   {
     q: "Can I return a product?",
-    a: "Devices and accessories can be returned within 14 days under the EU consumer right of withdrawal. For hygiene reasons, opened pods and e-liquids cannot be returned once unsealed.",
-  },
-  {
-    q: "Is my device covered by warranty?",
-    a: "Yes — every device carries a 12-month manufacturer warranty covering battery and chipset defects. Contact support with your order number and we will arrange a replacement.",
+    a: "Unopened trade cartons can be discussed within 14 days. Opened pods and e-liquids cannot be returned once unsealed, for hygiene reasons.",
   },
 ];
 
@@ -44,7 +44,7 @@ export default function SupportPage({ onBack }: Props) {
           <div>
             <h2 className="font-display text-xl font-extrabold tracking-tight">We're here to help</h2>
             <p className="mt-0.5 text-[13px] font-medium text-white/60">
-              Answers on age policy, shipping, nicotine and returns.
+              Answers on age policy, quotes, nicotine and returns.
             </p>
           </div>
         </div>
@@ -89,10 +89,10 @@ export default function SupportPage({ onBack }: Props) {
           <Mail className="size-6 text-mute" strokeWidth={2} />
           <p className="text-sm font-bold">Still need help?</p>
           <a
-            href="mailto:support@vaporlabs.eu"
+            href="mailto:trade@vaporlabs.eu"
             className="text-[15px] font-extrabold underline decoration-lemon decoration-2 underline-offset-4 transition hover:decoration-ink"
           >
-            support@vaporlabs.eu
+            trade@vaporlabs.eu
           </a>
           <p className="text-[11px] font-semibold text-mute">Replies within 24 h · Mon–Fri</p>
         </div>

@@ -3,7 +3,6 @@ import { Bell, LogOut, Package, ShieldCheck } from "lucide-react";
 import SubHeader from "../components/SubHeader";
 import Logo from "../components/Logo";
 import type { Order } from "../data";
-import { yuan } from "../data";
 
 interface Props {
   user: { email: string } | null;
@@ -47,7 +46,7 @@ export default function AccountPage({
               Sign in to VAPOR
             </h2>
             <p className="mt-2 text-sm font-medium text-mute">
-              Track orders, sync your wishlist and speed through checkout.
+              Track quotes, sync your wishlist and speed through enquiries.
             </p>
             <div className="mx-auto mt-7 max-w-sm text-left">
               <label className="text-xs font-bold tracking-[0.14em] text-mute" htmlFor="acct-email">
@@ -79,7 +78,6 @@ export default function AccountPage({
           </div>
         ) : (
           <div className="flex flex-col gap-4">
-            {/* profile */}
             <div className="animate-rise flex items-center gap-4 rounded-[28px] bg-card p-6">
               <span className="grid size-14 shrink-0 place-items-center rounded-full bg-ink font-display text-xl font-extrabold text-lemon">
                 {user.email[0].toUpperCase()}
@@ -91,18 +89,17 @@ export default function AccountPage({
                     <ShieldCheck className="size-3" strokeWidth={2.6} /> 18+ verified
                   </span>
                   <span className="rounded-full bg-paper px-2.5 py-1 text-[11px] font-bold text-mute">
-                    Member since 2026
+                    Trade since 2026
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* stats */}
             <div className="animate-rise grid grid-cols-3 divide-x divide-line rounded-[22px] bg-card py-4" style={{ animationDelay: "70ms" }}>
               {[
-                { label: "Orders", value: orders.length },
+                { label: "Quotes", value: orders.length },
                 { label: "Wishlist", value: wishlistCount },
-                { label: "In cart", value: cartCount },
+                { label: "In list", value: cartCount },
               ].map((s) => (
                 <div key={s.label} className="px-2 text-center">
                   <p className="font-display text-2xl font-extrabold">{s.value}</p>
@@ -111,11 +108,10 @@ export default function AccountPage({
               ))}
             </div>
 
-            {/* orders */}
             <div className="animate-rise rounded-[22px] bg-card p-5" style={{ animationDelay: "130ms" }}>
               <div className="flex items-center justify-between">
                 <h3 className="inline-flex items-center gap-2 font-display text-lg font-extrabold tracking-tight">
-                  <Package className="size-5" strokeWidth={2.2} /> Orders
+                  <Package className="size-5" strokeWidth={2.2} /> Quotes
                 </h3>
                 {orders.length > 0 && (
                   <button onClick={onViewOrders} className="text-[13px] font-bold text-mute transition hover:text-ink">
@@ -124,7 +120,7 @@ export default function AccountPage({
                 )}
               </div>
               {orders.length === 0 ? (
-                <p className="mt-3 text-sm font-medium text-mute">No orders yet — your first drop starts here.</p>
+                <p className="mt-3 text-sm font-medium text-mute">No quotes yet — add lines from the catalog.</p>
               ) : (
                 <div className="mt-3 flex flex-col gap-2.5">
                   {orders.map((o) => (
@@ -132,11 +128,11 @@ export default function AccountPage({
                       <div>
                         <p className="text-sm font-extrabold">#{o.id}</p>
                         <p className="text-[12px] font-semibold text-mute">
-                          {o.date} · {o.items.reduce((s, i) => s + i.qty, 0)} items
+                          {o.date} · {o.items.reduce((s, i) => s + i.qty, 0)} units
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="font-display text-base font-extrabold">{yuan(o.total)}</p>
+                        <p className="font-display text-base font-extrabold">{o.items.length} lines</p>
                         <span className="text-[11px] font-extrabold tracking-wide text-[#3f7d4e]">{o.status}</span>
                       </div>
                     </div>
@@ -145,7 +141,6 @@ export default function AccountPage({
               )}
             </div>
 
-            {/* settings */}
             <div className="animate-rise rounded-[22px] bg-card p-2" style={{ animationDelay: "190ms" }}>
               <button
                 onClick={onToggleNotifications}

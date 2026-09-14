@@ -13,8 +13,14 @@ import AccountPage from "./pages/AccountPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import SupportPage from "./pages/SupportPage";
 import {
-  CATEGORIES, GRID_PRODUCTS, getProduct,
-  type Filter, type Order, type OrderItem, type Product,
+  CATEGORIES,
+  FEATURED_ID,
+  GRID_PRODUCTS,
+  getProduct,
+  type Filter,
+  type Order,
+  type OrderItem,
+  type Product,
 } from "./data";
 
 type Route =
@@ -49,28 +55,56 @@ function save(key: string, value: unknown) {
 }
 
 export default function App() {
-  const [ageOk, setAgeOk] = useState<boolean>(() => load("vapor-age", false));
+  const [ageOk, setAgeOk] = useState(false);
   const [route, setRoute] = useState<Route>({ name: "home" });
   const [filter, setFilter] = useState<Filter>("All");
-  const [cart, setCart] = useState<CartItem[]>(() => load("vapor-cart", []));
-  const [wishlist, setWishlist] = useState<string[]>(() => load("vapor-wish", []));
-  const [orders, setOrders] = useState<Order[]>(() => load("vapor-orders", []));
-  const [user, setUser] = useState<{ email: string } | null>(() => load("vapor-user", null));
-  const [notifications, setNotifications] = useState<boolean>(() => load("vapor-notif", true));
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [wishlist, setWishlist] = useState<string[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [user, setUser] = useState<{ email: string } | null>(null);
+  const [notifications, setNotifications] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [toast, setToast] = useState<{ id: number; message: string } | null>(null);
   const toastTimer = useRef<number | undefined>(undefined);
+  const persist = useRef(false);
 
-  useEffect(() => save("vapor-cart", cart), [cart]);
-  useEffect(() => save("vapor-wish", wishlist), [wishlist]);
-  useEffect(() => save("vapor-orders", orders), [orders]);
-  useEffect(() => save("vapor-user", user), [user]);
-  useEffect(() => save("vapor-notif", notifications), [notifications]);
-  useEffect(() => save("vapor-age", ageOk), [ageOk]);
+  useEffect(() => {
+    setAgeOk(load("vapor-age", false));
+    setCart(load("vapor-cart", []));
+    setWishlist(load("vapor-wish", []));
+    setOrders(load("vapor-orders", []));
+    setUser(load("vapor-user", null));
+    setNotifications(load("vapor-notif", true));
+    persist.current = true;
+  }, []);
+
+  useEffect(() => {
+    if (!persist.current) return;
+    save("vapor-cart", cart);
+  }, [cart]);
+  useEffect(() => {
+    if (!persist.current) return;
+    save("vapor-wish", wishlist);
+  }, [wishlist]);
+  useEffect(() => {
+    if (!persist.current) return;
+    save("vapor-orders", orders);
+  }, [orders]);
+  useEffect(() => {
+    if (!persist.current) return;
+    save("vapor-user", user);
+  }, [user]);
+  useEffect(() => {
+    if (!persist.current) return;
+    save("vapor-notif", notifications);
+  }, [notifications]);
+  useEffect(() => {
+    if (!persist.current) return;
+    save("vapor-age", ageOk);
+  }, [ageOk]);
   useEffect(() => () => window.clearTimeout(toastTimer.current), []);
 
-  // lock scroll behind the age gate
   useEffect(() => {
     document.body.style.overflow = ageOk ? "" : "hidden";
     return () => {
@@ -89,7 +123,6 @@ export default function App() {
     window.scrollTo({ top: 0 });
   };
 
-  /* ---------- cart ---------- */
   const cartRows: CartRow[] = useMemo(
     () =>
       cart
@@ -102,6 +135,10 @@ export default function App() {
   const addToCart = (id: string, option: string, qty: number) => {
     const p = getProduct(id);
     if (!p) return;
+    if (p.stock === "out") {
+      showToast(`${p.name} is out of stock`);
+      return;
+    }
     setCart((prev) => {
       const i = prev.findIndex((c) => c.id === id && c.option === option);
       if (i >= 0) {
@@ -111,7 +148,7 @@ export default function App() {
       }
       return [...prev, { id, option, qty }];
     });
-    showToast(`${p.name} added to cart`);
+    showToast(`${p.name} added to quote`);
   };
   const addProduct = (p: Product) => addToCart(p.id, p.options[0], 1);
 
@@ -134,7 +171,6 @@ export default function App() {
     showToast(`${getProduct(id)?.name ?? "Item"} removed`);
   };
 
-  /* ---------- wishlist ---------- */
   const toggleWish = (id: string) => {
     setWishlist((prev) => {
       const has = prev.includes(id);
@@ -146,51 +182,36 @@ export default function App() {
     .map((id) => getProduct(id))
     .filter((p): p is Product => Boolean(p));
 
-  /* ---------- orders ---------- */
-  const placeOrder = (items: OrderItem[], total: number): string => {
+  const placeOrder = (items: OrderItem[]): string => {
     const id = String(Math.floor(10000 + Math.random() * 90000));
     const order: Order = {
       id,
       date: new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }),
       items,
-      total,
-      status: "Processing",
+      status: "Quoted",
     };
     setOrders((prev) => [order, ...prev]);
     setCart([]);
     return id;
   };
 
-  /* ---------- drawer routing ---------- */
   const handleDrawerLink = (link: string) => {
     setMenuOpen(false);
-    switch (link) {
-      case "Home":
-        navigate({ name: "home" });
-        break;
-      case "Shop Devices":
-        setFilter("Refillable");
-        navigate({ name: "home" });
-        break;
-      case "E-Liquids & Flavors":
-        setFilter("Disposable");
-        navigate({ name: "home" });
-        break;
-      case "Pods & Coils":
-        setFilter("Pods");
-        navigate({ name: "home" });
-        break;
-      case "Limited Drops":
-        navigate({ name: "home" });
-        showToast("Limited edition: Vapor Pro X Neon Series");
-        break;
-      case "Safety & Support":
-        navigate({ name: "support" });
-        break;
+    if (link === "Home") {
+      setFilter("All");
+      navigate({ name: "home" });
+      return;
+    }
+    if (link === "Safety & Support") {
+      navigate({ name: "support" });
+      return;
+    }
+    if ((CATEGORIES as readonly string[]).includes(link)) {
+      setFilter(link as Filter);
+      navigate({ name: "home" });
     }
   };
 
-  /* ---------- bottom nav ---------- */
   const activeTab: Tab =
     route.name === "cart" || route.name === "checkout"
       ? "cart"
@@ -210,11 +231,11 @@ export default function App() {
     navigate({ name: "product", id });
   };
 
-  const filtered = filter === "All" ? GRID_PRODUCTS : GRID_PRODUCTS.filter((p) => p.category === filter);
+  const filtered =
+    filter === "All" ? GRID_PRODUCTS : GRID_PRODUCTS.filter((p) => p.brand === filter);
 
   return (
     <div className="min-h-screen font-body text-ink">
-      {/* ambient page tint */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(900px_420px_at_72%_-12%,rgba(138,178,226,0.10),transparent_70%),radial-gradient(720px_380px_at_12%_-4%,rgba(231,154,107,0.09),transparent_70%)]"
@@ -224,7 +245,7 @@ export default function App() {
         <>
           <TopBar onMenu={() => setMenuOpen(true)} onSearch={() => setSearchOpen(true)} />
           <main className="mx-auto max-w-[1400px] px-4 pb-36 pt-5 md:px-8 md:pb-44 md:pt-9">
-            <Hero onBuy={() => navigate({ name: "product", id: "neon-series" })} />
+            <Hero onBuy={() => navigate({ name: "product", id: FEATURED_ID })} />
 
             <div className="no-scrollbar mt-7 flex gap-2.5 overflow-x-auto pb-1 md:mt-10 md:gap-3">
               {CATEGORIES.map((c) => {
@@ -262,7 +283,7 @@ export default function App() {
 
             {filtered.length === 0 && (
               <p className="animate-fade py-20 text-center text-sm font-semibold text-mute">
-                No products in this category yet.
+                No products in this brand yet.
               </p>
             )}
 
@@ -273,6 +294,7 @@ export default function App() {
 
       {route.name === "product" && (
         <ProductDetail
+          key={route.id}
           id={route.id}
           onBack={goHome}
           onAdd={addToCart}
@@ -289,7 +311,7 @@ export default function App() {
           onRemove={removeItem}
           onClear={() => {
             setCart([]);
-            showToast("Cart cleared");
+            showToast("Quote list cleared");
           }}
           onCheckout={() => navigate({ name: "checkout" })}
           onBrowse={goHome}
@@ -360,7 +382,14 @@ export default function App() {
 
       {toast && <Toast id={toast.id} message={toast.message} />}
 
-      {!ageOk && <AgeGate onConfirm={() => setAgeOk(true)} />}
+      {!ageOk && (
+        <AgeGate
+          onConfirm={() => {
+            setAgeOk(true);
+            window.scrollTo({ top: 0 });
+          }}
+        />
+      )}
     </div>
   );
 }

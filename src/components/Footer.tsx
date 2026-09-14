@@ -3,27 +3,27 @@ import Logo from "./Logo";
 import Reveal from "./Reveal";
 
 const COMPLIANCE = [
-  "Compliant with EU TPD 2014/40/EU & CLP regulation",
-  "Tank capacity ≤ 2 ml · refill containers ≤ 10 ml",
-  "Nicotine strength capped at 20 mg/ml",
-  "CE-marked hardware, notified via the EU-CEG portal",
+  "Adult trade only — 18+ (21+ where required by local law)",
+  "Destination-market rules apply for nicotine strength and tank size",
+  "Hardware CE-marked where supplied for the EU",
   "Child-resistant & tamper-evident packaging",
-  "Free of CMR substances and prohibited additives",
+  "Not a licensed smoking-cessation medicine",
+  "Keep devices and e-liquid away from children and pets",
 ];
 
 const SAFETY = [
   "For adult smokers & vapers only — never for non-smokers",
   "Do not use if pregnant, breastfeeding or with heart conditions",
-  "Keep devices and e-liquid away from children and pets",
-  "Not a licensed smoking-cessation medicine",
+  "Nicotine is a highly addictive substance",
   "If swallowed or unwell, contact a poison centre immediately",
+  "Age check required before any dispatch",
 ];
 
 const ENVIRONMENT = [
   "Dispose of devices & batteries per WEEE Directive 2012/19/EU",
   "Remove the battery and recycle at designated collection points",
-  "Packaging is recyclable and FSC-sourced",
-  "Materials comply with REACH & RoHS standards",
+  "Packaging is recyclable",
+  "Materials intended to comply with REACH & RoHS",
 ];
 
 function PolicyCard({
@@ -62,7 +62,6 @@ function PolicyCard({
 export default function Footer() {
   return (
     <footer className="mt-16 flex flex-col gap-5 md:mt-24">
-      {/* mandatory health warning */}
       <Reveal>
         <div className="flex flex-col gap-4 rounded-[28px] bg-ink p-6 text-white md:flex-row md:items-center md:gap-6 md:p-8">
           <span className="grid size-12 shrink-0 place-items-center rounded-full bg-lemon text-ink">
@@ -82,14 +81,12 @@ export default function Footer() {
         </div>
       </Reveal>
 
-      {/* policy cards */}
       <div className="grid gap-4 md:grid-cols-3 md:gap-5">
-        <PolicyCard icon={ShieldCheck} title="EU / TPD Compliance" items={COMPLIANCE} delay={0} />
+        <PolicyCard icon={ShieldCheck} title="Trade & Compliance" items={COMPLIANCE} delay={0} />
         <PolicyCard icon={HeartPulse} title="Health & Safety" items={SAFETY} delay={120} />
         <PolicyCard icon={Recycle} title="Recycling & Environment" items={ENVIRONMENT} delay={240} />
       </div>
 
-      {/* member-state notes */}
       <Reveal delay={120}>
         <div className="rounded-[24px] bg-card p-6 shadow-[0_20px_44px_-34px_rgba(22,22,15,0.4)] md:p-7">
           <div className="flex items-center gap-3">
@@ -102,16 +99,13 @@ export default function Footer() {
           </div>
           <p className="mt-4 text-[13px] font-medium leading-relaxed text-mute">
             The legal purchase age is 18+ in all EU and EEA member states. Distance-sale, flavour
-            and retail rules vary by country: Belgium, Denmark and Finland restrict cross-border
-            sales of e-cigarettes; France prohibits sales to minors under the Public Health Code;
-            Hungary, the Netherlands and Italy apply additional retail and labelling requirements.
-            Please check your local regulations before placing an order — we ship only where
-            permitted by law.
+            and retail rules vary by country. We quote and ship only where permitted by law —
+            please check local regulations before placing an enquiry. Prices are provided on
+            request and are not listed on this catalog.
           </p>
         </div>
       </Reveal>
 
-      {/* bottom bar */}
       <Reveal delay={180}>
         <div className="flex flex-col items-center justify-between gap-5 rounded-[24px] bg-card px-6 py-5 md:flex-row md:px-7">
           <div className="flex items-center gap-3">

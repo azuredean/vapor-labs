@@ -8,7 +8,6 @@ export default function Logo({ className = "h-9 w-9" }: Props) {
     <svg viewBox="0 0 48 48" className={className} aria-label="Vapor logo">
       <circle cx="24" cy="28" r="12" fill="var(--color-lemon)" />
 
-      {/* rising vapor */}
       <g
         fill="none"
         stroke="var(--color-ink)"
@@ -20,13 +19,10 @@ export default function Logo({ className = "h-9 w-9" }: Props) {
         <path d="M26.6 17.6 C 25 15.6, 28.2 13.8, 26.6 11.6" opacity="0.5" />
       </g>
 
-      {/* device body */}
       <rect x="20.5" y="22.5" width="7" height="13.5" rx="3.5" fill="var(--color-ink)" />
       <rect x="22" y="20" width="4" height="4" rx="1.6" fill="var(--color-ink)" />
-      {/* indicator light */}
       <circle cx="24" cy="32.5" r="1.3" fill="var(--color-lemon)" />
 
-      {/* spark accents */}
       <path
         d="M39 11.5 v5 M36.5 14 h5"
         stroke="var(--color-ink)"

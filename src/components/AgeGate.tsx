@@ -21,8 +21,9 @@ export default function AgeGate({ onConfirm }: Props) {
             Are you 18 or older?
           </h2>
           <p className="mt-4 text-sm font-medium leading-relaxed text-mute">
-            This store sells nicotine-containing vapor products. By entering, you confirm that you
-            are of legal age in your country of residence.
+            This catalog lists nicotine-containing vapor products for licensed
+            adult trade. By entering, you confirm that you are of legal age in
+            your country of residence.
           </p>
 
           <div className="mt-8 flex flex-col gap-3">
@@ -42,7 +43,7 @@ export default function AgeGate({ onConfirm }: Props) {
           </div>
 
           <p className="mt-6 text-[11px] font-semibold leading-relaxed text-mute">
-            Nicotine is a highly addictive substance. Products comply with EU TPD 2014/40/EU.
+            Nicotine is a highly addictive substance. Intended for adult smokers and vapers only.
           </p>
         </div>
       ) : (
@@ -54,7 +55,7 @@ export default function AgeGate({ onConfirm }: Props) {
           </div>
           <h2 className="mt-6 font-display text-3xl font-extrabold tracking-[-0.03em]">Access denied</h2>
           <p className="mt-3 text-sm font-medium leading-relaxed text-mute">
-            You must be of legal age to view this store. Come back once you are 18 or older — we'll
+            You must be of legal age to view this catalog. Come back once you are 18 or older — we'll
             be here.
           </p>
           <button

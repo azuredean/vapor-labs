@@ -18,7 +18,7 @@ export default function SubHeader({ title, onBack, right }: Props) {
         >
           <ArrowLeft className="size-[22px]" strokeWidth={2.4} />
         </button>
-        <h1 className="absolute left-1/2 -translate-x-1/2 font-display text-[17px] font-extrabold tracking-tight">
+        <h1 className="absolute left-1/2 max-w-[60%] -translate-x-1/2 truncate text-center font-display text-[17px] font-extrabold tracking-tight">
           {title}
         </h1>
         <div className="grid size-11 place-items-center">{right}</div>

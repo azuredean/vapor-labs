@@ -1,6 +1,6 @@
 import { Heart, Plus } from "lucide-react";
 import type { Product } from "../data";
-import { yuan } from "../data";
+import ProductVisual from "./ProductVisual";
 
 interface Props {
   product: Product;
@@ -12,17 +12,22 @@ interface Props {
 }
 
 export default function ProductCard({ product, index, wishlisted, onAdd, onOpen, onToggleWish }: Props) {
+  const out = product.stock === "out";
   return (
     <article
       className="group animate-rise relative flex cursor-pointer flex-col rounded-[24px] bg-card p-4 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_26px_48px_-30px_rgba(22,22,15,0.35)] md:rounded-[28px] md:p-5"
-      style={{ animationDelay: `${100 + index * 70}ms` }}
+      style={{ animationDelay: `${100 + index * 40}ms` }}
       onClick={() => onOpen(product.id)}
     >
       {product.badge && (
         <span
           className={
             "absolute left-4 top-4 z-10 rounded-lg px-2.5 py-1 text-[11px] font-extrabold tracking-wide md:left-5 md:top-5 " +
-            (product.badge === "NEW" ? "bg-lemon text-ink" : "bg-ink text-white")
+            (product.badge === "NEW"
+              ? "bg-lemon text-ink"
+              : product.badge === "LOW"
+                ? "bg-ember text-white"
+                : "bg-ink text-white")
           }
         >
           {product.badge}
@@ -43,21 +48,26 @@ export default function ProductCard({ product, index, wishlisted, onAdd, onOpen,
         <Heart className="size-4" strokeWidth={2.4} fill={wishlisted ? "currentColor" : "none"} />
       </button>
 
-      <div className="flex h-40 items-center justify-center md:h-52">
-        <div className="capsule h-[86px] w-[26px] rounded-full transition-transform duration-500 ease-out group-hover:-translate-y-2 group-hover:rotate-[4deg] md:h-[100px] md:w-[28px]" />
-      </div>
+      <ProductVisual product={product} className="h-40 md:h-52" />
 
-      <h3 className="mt-3 text-[15px] font-bold leading-snug tracking-tight md:text-base">{product.name}</h3>
+      <p className="mt-3 text-[11px] font-bold tracking-[0.14em] text-mute">{product.brand}</p>
+      <h3 className="mt-0.5 text-[15px] font-bold leading-snug tracking-tight md:text-base">{product.name}</h3>
 
-      <div className="mt-1.5 flex items-center justify-between">
-        <span className="font-display text-lg font-extrabold tracking-tight">{yuan(product.price)}</span>
+      <div className="mt-1.5 flex items-center justify-between gap-2">
+        <div className="min-w-0">
+          <span className="font-display text-lg font-extrabold tracking-tight">{product.puffs ?? product.kind}</span>
+          <p className="truncate text-[11px] font-semibold text-mute">
+            {product.options.length > 1 ? `${product.options.length} options` : product.kind}
+          </p>
+        </div>
         <button
           onClick={(e) => {
             e.stopPropagation();
             onAdd(product);
           }}
-          aria-label={`Add ${product.name} to cart`}
-          className="grad-cta glow-blue grid size-11 place-items-center rounded-full text-white transition hover:scale-110 hover:brightness-105 active:scale-90"
+          disabled={out}
+          aria-label={`Add ${product.name} to quote`}
+          className="grad-cta glow-blue grid size-11 shrink-0 place-items-center rounded-full text-white transition hover:scale-110 hover:brightness-105 active:scale-90 disabled:opacity-35 disabled:hover:scale-100"
         >
           <Plus className="size-[18px]" strokeWidth={2.8} />
         </button>
