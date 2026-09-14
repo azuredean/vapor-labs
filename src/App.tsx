@@ -225,6 +225,16 @@ export default function App() {
     navigate({ name: t });
   };
 
+  const confirmAge = () => {
+    try {
+      localStorage.setItem("vapor-age", JSON.stringify(true));
+    } catch {
+      /* storage unavailable */
+    }
+    persist.current = true;
+    setAgeOk(true);
+    window.scrollTo({ top: 0, behavior: "auto" });
+  };
   const goHome = () => navigate({ name: "home" });
   const openProduct = (id: string) => {
     setSearchOpen(false);
@@ -233,6 +243,14 @@ export default function App() {
 
   const filtered =
     filter === "All" ? GRID_PRODUCTS : GRID_PRODUCTS.filter((p) => p.brand === filter);
+
+  if (!ageOk) {
+    return (
+      <div className="min-h-screen font-body text-ink">
+        <AgeGate onConfirm={confirmAge} />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen font-body text-ink">
@@ -381,15 +399,6 @@ export default function App() {
       <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} onAdd={addProduct} onOpen={openProduct} />
 
       {toast && <Toast id={toast.id} message={toast.message} />}
-
-      {!ageOk && (
-        <AgeGate
-          onConfirm={() => {
-            setAgeOk(true);
-            window.scrollTo({ top: 0 });
-          }}
-        />
-      )}
     </div>
   );
 }

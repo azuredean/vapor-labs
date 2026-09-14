@@ -347,6 +347,7 @@ export const PRODUCTS: Product[] = [
       ["Stock", "In stock"],
     ],
     stock: "in",
+    image: img("elfbar-elfliq-30ml"),
     puffs: "30 ml",
   },
   {
