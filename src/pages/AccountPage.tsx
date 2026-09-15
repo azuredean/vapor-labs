@@ -36,7 +36,7 @@ export default function AccountPage({
     <>
       <SubHeader title="Account" onBack={onBack} />
 
-      <main className="mx-auto max-w-[760px] px-4 pb-44 pt-5 md:pb-28 md:pt-8">
+      <main className="mx-auto max-w-[760px] px-4 pb-8 pt-5 md:pt-8">
         {!user ? (
           <div className="animate-rise rounded-[28px] bg-card p-7 text-center md:p-10">
             <div className="flex justify-center">
